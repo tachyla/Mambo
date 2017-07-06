@@ -1,0 +1,22 @@
+{
+  "name": "thinkful-full-stack-template-server",
+  "version": "1.0.0",
+  "description": "Server portion of a full-stack starter template",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Joe Turner <jturner@thinkful.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.14.1",
+    "mongoose": "^4.11.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth20": "^1.0.0",
+    "passport-http-bearer": "^1.0.1"
+  }
+}
