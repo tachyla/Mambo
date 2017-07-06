@@ -9,7 +9,7 @@ const initialState = {
   error: null,
   currentQuestion: 0,
   answeredCorrectly: null,
-  score: [0,0]
+  score: {}
 };
 
 
@@ -37,9 +37,12 @@ export default function reducer(state=initialState, action) {
   }
   else if(action.type === NEXT_QUESTION) {
     console.log(action.numerator)
-    state.score[0] += action.numerator;
-    state.score[1] += action.denominator;
-     return{...state, currentQuestion: action.counter, answeredCorrectly: action.boolean, score: [...state.score]}
+    if(!state.score.hasOwnProperty(action.currentQuestion)) {
+      state.score[action.currentQuestion] = [0,0]
+    }
+    state.score[action.currentQuestion][0] += action.numerator;
+    state.score[action.currentQuestion][1] += action.denominator;
+     return{...state, currentQuestion: action.counter, answeredCorrectly: action.boolean, score: {...state.score}}
   }
   return state;
 }

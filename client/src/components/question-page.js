@@ -36,7 +36,7 @@ export class QuestionPage extends React.Component {
   checkAnswer() {
     let linkedlist = this.state.myLinkedList;
 
-    // let currentQuestion = linkedlist.get(0).question;
+    let currentQuestion = linkedlist.get(this.state.index).question;
     console.log(this.state.value);
     console.log(linkedlist.get(this.state.index).answer);
 
@@ -49,12 +49,12 @@ export class QuestionPage extends React.Component {
       linkedlist.insert(linkedlist.length, linkedlist.get(this.state.index));
       this.setState({ index: this.state.index + 1 });
       //put this dispatch attached to an onlick of the next button
-      this.props.dispatch(nextQuestion(this.state.index + 1, true, 1, 1));
+      this.props.dispatch(nextQuestion(this.state.index + 1, true, 1, 1, currentQuestion));
       this.setState({ value: "" });
     } else {
       linkedlist.insert(this.state.index + 3, linkedlist.get(this.state.index));
       this.setState({ index: this.state.index + 1 });
-      this.props.dispatch(nextQuestion(this.state.index + 1, false, 0, 1));
+      this.props.dispatch(nextQuestion(this.state.index + 1, false, 0, 1, currentQuestion));
       this.setState({ value: "" });
     }
   }
@@ -83,6 +83,7 @@ export class QuestionPage extends React.Component {
             onChange={this.handleChange}
           />
           <p>Correct!!! Great Job!</p>
+          
         </div>
       );
     }
@@ -131,34 +132,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(QuestionPage);
-
-//have a counter, display questions until counter hits a certain number, lets say 50
-//have 2 linked list, one with questions, one with answers
-// while counter < 50
-// current index = 0
-// if userInput === answers.get(index)
-//  questions.remove(index) and answers.remove(index)
-//THEN questions.insert(this.length, get(index)) and  answers.insert(this.length, get(index))
-//counter ++ index++
-//ELSE
-//  questions.remove(index) and answers.remove(index)
-//THEN questions.insert(index+2, get(index)) and  answers.insert(index+2, get(index))
-//counter++ index ++
-
-//app loads the first question in the array.
-//On submittal of answer, check to see if the answer was correct
-// show feedback if correct or incorrect, adjust the linked list
-//move onto next question
-
-// let index = 0;
-//         let userInput = 'Donald'
-//         let currentQuestion = this.state.myLinkedList.get(index).question;
-
-//         if(userInput === this.state.myLinkedList.get(index).answer) {
-//                 //put this dispatch attached to an onlick of the next button
-//                 this.props.dispatch(nextQuestion(index++))
-//                 this.setState({showResults: true})
-//             }
-
-//submit button 2 actions of numerator and denomitor
-// if action.bool = true do this else do that

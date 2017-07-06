@@ -6,7 +6,7 @@ const runServer = require('./server').runServer;
 
 if (process.env.NODE_ENV === 'production') {
     // Just run the server
-  runServer(process.env.PORT || 8080);
+  runServer(undefined, process.env.PORT || 8080);
 }
 else {
   const app = express();
