@@ -23,38 +23,27 @@ export class QuestionPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.questions.length > 0 &&
-      this.state.myLinkedList.length === 0
-    ) {
+    if (nextProps.questions.length > 0 && this.state.myLinkedList.length === 0 ) {
       nextProps.questions.forEach((question, index) => {
-        this.state.myLinkedList.insert(index, question);
+      this.state.myLinkedList.insert(index, question);
       });
     }
   }
 
   checkAnswer() {
     let linkedlist = this.state.myLinkedList;
+    let index = this.state.index;
+    let currentQuestion = linkedlist.get(index).question;
 
-    let currentQuestion = linkedlist.get(this.state.index).question;
-    console.log(this.state.value);
-    console.log(linkedlist.get(this.state.index).answer);
-
-    if (
-      this.state.value.toLowerCase() ===
-      linkedlist.get(this.state.index).answer.toLowerCase()
-    ) {
-      console.log(this.state.value);
-      console.log(linkedlist.get(this.state.index).answer);
-      linkedlist.insert(linkedlist.length, linkedlist.get(this.state.index));
-      this.setState({ index: this.state.index + 1 });
-      //put this dispatch attached to an onlick of the next button
-      this.props.dispatch(nextQuestion(this.state.index + 1, true, 1, 1, currentQuestion));
+    if (this.state.value.toLowerCase() === linkedlist.get(index).answer.toLowerCase()) {
+      linkedlist.insert(linkedlist.length, linkedlist.get(index));
+      this.setState({ index: index + 1 });
+      this.props.dispatch(nextQuestion(index + 1, true, 1, 1, currentQuestion));
       this.setState({ value: "" });
     } else {
-      linkedlist.insert(this.state.index + 3, linkedlist.get(this.state.index));
-      this.setState({ index: this.state.index + 1 });
-      this.props.dispatch(nextQuestion(this.state.index + 1, false, 0, 1, currentQuestion));
+      linkedlist.insert(index + 3, linkedlist.get(index));
+      this.setState({ index: index + 1 });
+      this.props.dispatch(nextQuestion(index + 1, false, 0, 1, currentQuestion));
       this.setState({ value: "" });
     }
   }
@@ -67,41 +56,35 @@ export class QuestionPage extends React.Component {
     if (this.props.questions.length <= 0) {
       return <div />;
     }
+    let feedback;
 
     if (this.props.answeredCorrectly === true) {
-      return (
+      let prevQuestion = this.props.score[this.state.myLinkedList.get(this.state.index - 1).question];
+      let score = prevQuestion[0] / prevQuestion[1];
+      let prevWord = this.state.myLinkedList.get(this.state.index - 1);
+      feedback = (
         <div>
-          <ul className="question-list">
-            {this.state.myLinkedList.get(this.props.currentQuestion).question}
-          </ul>
-          <button className="submit-button" onClick={this.checkAnswer}>
-            Submit
-          </button>
-          <input
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
           <p>Correct!!! Great Job!</p>
-          
+          <p>
+            You have answered {prevWord.question} correctly{" "}
+            {(score * 100).toFixed(0)}% of the time!
+          </p>
         </div>
       );
     }
     if (this.props.answeredCorrectly === false) {
-      return (
+      let prevQuestion = this.props.score[ this.state.myLinkedList.get(this.state.index - 1).question];
+      let score = prevQuestion[0] / prevQuestion[1];
+      let prevWord = this.state.myLinkedList.get(this.state.index - 1);
+      feedback = (
         <div>
-          <ul className="question-list">
-            {this.state.myLinkedList.get(this.props.currentQuestion).question}
-          </ul>
-          <button className="submit-button" onClick={this.checkAnswer}>
-            Submit
-          </button>
-          <input
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-          <p>Incorrect!!! The correct answer was {this.state.myLinkedList.get(this.props.currentQuestion-1).answer}!!!</p>
+          <p>
+            Incorrect!!! The correct answer was {prevWord.answer}!!!
+          </p>
+          <p>
+            You have answered {prevWord.question} correctly{" "}
+            {(score * 100).toFixed(0)}% of the time!
+          </p>
         </div>
       );
     }
@@ -109,7 +92,7 @@ export class QuestionPage extends React.Component {
     return (
       <div>
         <ul className="question-list">
-          {this.state.myLinkedList.get(this.props.currentQuestion).question}
+          <li>{this.state.myLinkedList.get(this.state.index).question}</li>
         </ul>
         <button className="submit-button" onClick={this.checkAnswer}>
           Submit
@@ -119,6 +102,7 @@ export class QuestionPage extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
         />
+        {feedback}
       </div>
     );
   }
@@ -126,7 +110,6 @@ export class QuestionPage extends React.Component {
 
 const mapStateToProps = state => ({
   questions: state.questions,
-  currentQuestion: state.currentQuestion,
   answeredCorrectly: state.answeredCorrectly,
   score: state.score
 });

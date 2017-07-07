@@ -39,7 +39,7 @@ export const fetchUserError = error => ({
 });
 
 export const NEXT_QUESTION = 'NEXT_QUESTION';
-export const nextQuestion = (counter,boolean,numerator,denominator, currentQuestion) => ({
+export const nextQuestion = (counter,boolean,numerator,denominator,currentQuestion) => ({
   type: NEXT_QUESTION,
   counter,
   boolean,
