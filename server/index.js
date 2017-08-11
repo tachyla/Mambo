@@ -9,11 +9,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const {DATABASE_URL, PORT} = process.env;
 const {Question, User} = require('./models');
-// const {DATABASE_URL, PORT} = require('../config');
-// mongoose.connect(DATABASE_URL,function(err){
-//   if(err) console.log('Something wrong with mongoose connection');
-//   console.log('MLab connected!');
-// });
+
 let secret = {
   CLIENT_ID: process.env.CLIENT_ID,
   CLIENT_SECRET: process.env.CLIENT_SECRET
@@ -41,16 +37,19 @@ app.get('/api/questions', passport.authenticate('bearer', {session: false}), (re
     });
 });
 
-app.get('/api/users/:accessToken',  (req, res) => {
+app.get('/api/me', passport.authenticate('bearer', {session: false}),(req, res) => {
+  return res.json(req.user);
+});
+
+app.put('/api/users/:googleId', passport.authenticate('bearer', {session: false}), (req, res) => {
   User
-    .findOne({accessToken: req.params.accessToken})
-    .then(user =>{
-      console.log(user);
-      return res.json(user);
+    .findOneAndUpdate({googleId: req.params.googleId}, {$set:{ score:req.body.score}}, {new: true})
+    .then(results => {
+      res.json(results).end();
     })
     .catch(err => {
       console.log(err);
-      res.status(500).json({error: 'Something went wrong!!!'});
+      res.status(400).json({error: 'Put request fail'});
     });
 });
 
@@ -62,8 +61,8 @@ passport.use(
       callbackURL: '/api/auth/google/callback'
     },
     (accessToken, refreshToken, profile, cb) => {
-      User.find({googleId: profile.id}, function(err, user){
-        if(!user.length) {
+      User.findOne({googleId: profile.id}, function(err, user){
+        if(!user) {
           User.create({
             googleId: profile.id,
             name:profile.displayName,
@@ -72,20 +71,23 @@ passport.use(
             return cb(null, user);
           });
         } else {
-          return cb(null, user);
+          User.findOneAndUpdate({googleId: profile.id}, {accessToken}, {new: true}, function(err, user){
+            return cb(null, user);
+          });
+          
         }
       });
     }
 ));
 
+
 passport.use(
     new BearerStrategy(
         (token, done) => {
-          User.find({accessToken: token}, function(err, user){
-            if(!user.length) {
+          User.findOne({accessToken: token}, function(err, user){
+            if(!user) {
               return done(null, false);
             }
-            console.log('UserToken',user);
             return done(null, user);
           });
         }
@@ -123,30 +125,8 @@ app.get(/^(?!\/api(\/|$))/, (req, res) => {
 });
 
 let server;
-// function runServer(port=3001) {
-//   return new Promise((resolve, reject) => {
-//     server = app.listen(port, () => {
-//       resolve();
-//     }).on('error', reject);
-//   });
-// }
-
-// function closeServer() {
-//   return new Promise((resolve, reject) => {
-//     server.close(err => {
-//       if (err) {
-//         return reject(err);
-//       }
-//       resolve();
-//     });
-//   });
-// }
-
-
 
 function runServer(databaseUrl=DATABASE_URL, port=PORT) {
-  console.log(databaseUrl);
-  console.log(DATABASE_URL);
   return new Promise((resolve, reject) => {
     mongoose.connect(databaseUrl, err => {
       if (err) {

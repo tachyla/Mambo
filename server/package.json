@@ -6,7 +6,6 @@
   "scripts": {
     "start": "nodemon index.js"
   },
-  "author": "Joe Turner <jturner@thinkful.com>",
   "license": "MIT",
   "devDependencies": {
     "nodemon": "^1.11.0"

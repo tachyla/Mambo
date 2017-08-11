@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
   name: {type: String, required: true},
   accessToken: {type: String, required: true},
   currentQuestion: {type: String},
-  score: {type: Array}
+  score: {type: {}, default: {'placeholder': [0,0]} }
 });
 
 userSchema.methods.apiRepr = function() {
