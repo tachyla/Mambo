@@ -14,9 +14,8 @@ class App extends React.Component {
 
     componentDidMount() {
         const accessToken = Cookies.get('accessToken');
-        console.log(accessToken)
-        if(accessToken) {
-             this.props.dispatch(fetchUser(accessToken));
+         if(accessToken) {
+            this.props.dispatch(fetchUser(accessToken));
         }
     }
 
@@ -27,11 +26,6 @@ class App extends React.Component {
 
         return <QuestionPage />;
     }
-    //  render() {
-    //     if (!this.props.currentUser===null) return <LoginPage />;
-        
-    //     return <QuestionPage />;
-    // }
 }
 
 const mapStateToProps = (state)=>({
@@ -39,5 +33,3 @@ const mapStateToProps = (state)=>({
 })
 
 export default connect(mapStateToProps)(App);
-
- 
