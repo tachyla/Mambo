@@ -1,99 +1,17 @@
-# Space Repetition Starter Kit
+Mambo
+Learning a new language is fun and exciting, but can also be a very daunting task when learning on your own. Mambo is a unique application that uses a spaced repetition algorithm to enhance user’s ability to quickly master Swahili vocabulary words by prioritizing words that the users specifically struggles with. As a result, the more often a user practices a word, the sooner they commit it to memory. 
 
-This should get you started with your Spaced Repetition app. We're giving you your basic directory structure, and the framework for authentication. However, we aren't persisting any information, and it will be your job to add Mongo/Mongoose. There are helpful comments in `server/index.js`.
+What is Mambo
+A mobile dictionary designed to help you effectively learn Swahili. Simply log in with the option of Google Authentication and Swahili words display awaiting your translation. When you answer correctly, the word is repositioned at the end of the vocabulary list. However, if you answer incorrectly, the word is repositioned forward 2 spaces in the vocabulary list to give you another shot at committing that word to memory. The app’s feedback tells you the correct answer if you’ve answered incorrectly or congratulates you when you’re on a roll. We store your progress so you can measure how well you’re learning the language as well as let users know where they can use more practice. 
 
-In development, the starter kit runs two servers. One of which is from `create-react-app`, so you get all the fancy hot reloading, etc, the other is the backend. In production, we generate a static folder with all our React stuff, and serve that with Express.
+ScreenShots
+[Landing Page]()
+[Main Screen]()
+[Correct Answer]()
+[Incorrect Answer]()
 
-## Getting started
-
-First, fork the repo on Github to your own account
-
-### Clone the repo
-
-```sh
-$ git clone https://github.com/YOUR_USERNAME_HERE/spaced-repetition-starter
-```
-
-```sh
-$ cd spaced-repetition-starter
-```
-
-```sh
-$ npm install
-```
-
-You can run it locally now with `npm run dev`, but the Google OAuth stuff won't work without your own credentials.
-
-### Get Google OAuth Credentials
-
-Visit https://console.developers.google.com
-
-* Navigate to Library 
-* Under 'Social APIs', Click 'Google+ API'
-* Click 'Enable' at the top (if it isn't already)
+Tech Stack
+React, Redux, Node.js, MongoDB, Mongoose, Google Oauth 2.0
 
 
-* Navigate to Credentials
-* It may require you to configure OAuth consent screen.
-* Click 'Create credentials'
-* Choose 'OAuth Client ID'
-* Choose 'Web application'
-* Add `http://localhost:8080` to Authorized JavaScript origins
-* Add `http://localhost:8080/api/auth/google/callback` to Authorized redirect URIs
-* Click 'Create'
 
-You should get a Client ID and Secret.
-
-Back in your project locally, create an `secret.js` file in the `/server` directory:
-
-(Use the client ID and secret we just got from Google)
-
-```js
-module.exports = {
-  CLIENT_ID: 'yourId123.apps.googleusercontent.com',
-  CLIENT_SECRET: 'yoursecret'
-}
-```
-
-This file is in ignored by git because it is in your `.gitignore`. Never commit or push 'secret.js', the client id and secret need to be kept safe like a password.
-
-### Local Development
-
-```sh
-  npm run dev
-```
-
-## Deployment to Heroku
-
-```sh
-$ heroku create
-```
-
-Configure your Google client id and secret on Heroku:
-
-```sh
-$ heroku config:set CLIENT_ID=yourId123.apps.googleusercontent.com CLIENT_SECRET=yoursecret
-```
-
-(You can also do this on dashboard.heroku.com under your app's settings.)
-
-### To deploy:
-
-```sh
-$ git push heroku master
-```
-
-Your app should be live on Heroku soon, but if you try to `Log in with Google`, you will get a 400 error. Take note of your new app's URL.
-
-
-#### Updating Google API authorized origins
-
-
-To fix this, go back to the Google API Dashboard and:
-
-(You might need to use `http` and or `http` for your Heroku URIs)
-
-- Add `http://your-app-name-123.herokuapp.com` to Authorized JavaScript origins
-- Add `http://your-app-name-123.herokuapp.com/api/auth/google/callback` to Authorized redirect URIs
-
-Try to log in  `Log in with Google` again, and you're golden!
